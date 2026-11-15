@@ -148,8 +148,9 @@ class QemuBoard:
         mark = len(self.buffer)
         self.send(user + "\n")
         self.expect(self.SHELL_PROMPT, 30, start=mark)
-        # Quiet kernel messages so they do not interleave with command output.
-        self.run("dmesg -n 1", timeout=15)
+        # Quiet kernel messages so they do not interleave with command output,
+        # and widen the terminal so long command lines are not wrapped.
+        self.run("dmesg -n 1; stty cols 4096", timeout=15)
         return time.monotonic() - t0
 
     def run(self, command, timeout=DEFAULT_CMD_TIMEOUT):
@@ -158,13 +159,13 @@ class QemuBoard:
         # The marker is split by '' so the echoed command line never matches.
         self.send(f"{command}; echo __END_{tag}''_$?__\n")
         mark = len(self.buffer)
+        # Skip the echoed command line: it ends with the unexpanded marker.
+        echo = self.expect(re.compile(re.escape(f"{tag}''_$?__".encode())), timeout, start=mark)
         m = self.expect(
-            re.compile(rb"__END_" + tag.encode() + rb"_(\d+)__"), timeout, start=mark)
-        raw = self.buffer[mark:m.start()].decode(errors="replace")
+            re.compile(rb"__END_" + tag.encode() + rb"_(\d+)__"), timeout, start=echo.end())
+        raw = self.buffer[echo.end():m.start()].decode(errors="replace")
         self.expect(self.SHELL_PROMPT, 10, start=m.end())
-        # Drop the echoed command line (first line) and normalise line endings.
-        lines = raw.replace("\r", "").split("\n")[1:]
-        return "\n".join(lines).strip("\n"), int(m.group(1))
+        return raw.replace("\r", "").strip("\n"), int(m.group(1))
 
 
 def main():

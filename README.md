@@ -25,7 +25,9 @@ serial console.
 
 ## Status
 
-Stage 1: base board builds and boots headless, with an automated check.
+Stage 1 done: the base board builds from source in ~35 min (4 cores, first build)
+and boots to a root shell in ~4 s under QEMU without KVM. The harness detects
+failing commands and kernel panics, and every run starts from a pristine rootfs.
 
 | Board | Emulated machine | Kernel | Build system |
 |---|---|---|---|
@@ -35,7 +37,7 @@ Stage 1: base board builds and boots headless, with an automated check.
 
 ```sh
 make deps    # qemu-system-arm, build tools
-make base    # download Buildroot, build toolchain + kernel + rootfs (~1 h first time)
+make base    # download Buildroot, build toolchain + kernel + rootfs (~35 min on 4 cores, first time)
 make check   # boot headless, log in over serial, run a command, exit 0 on success
 make boot    # interactive serial console (Ctrl-A X to quit)
 ```
