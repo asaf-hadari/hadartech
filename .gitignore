@@ -9,3 +9,12 @@
 # Local ruflo state
 .swarm/
 .claude/settings.json.bak-*
+# ruflo per-session runtime state
+.claude-flow/mods/session.json
+.claude-flow/policy/state.json
+.claude-flow/harness-active-policy.json
+.claude-flow/protector-mod/status.json
+.claude-flow/protector-mod/baseline.json
+.claude-flow/protector-mod/alerts.jsonl
+.claude/proven-config.json
+.claude/.proven-config-version
