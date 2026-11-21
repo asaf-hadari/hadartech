@@ -1,23 +1,14 @@
-# Ruflo local secrets and runtime data
+# Secrets
 .env
 .env.local
 .env.*.local
-.claude-flow/data/
-.claude-flow/logs/
-.claude-flow/sessions/
 
-# Local ruflo state
+# ruflo: keep only the project config under .claude-flow/
+.claude-flow/*
+!.claude-flow/config.yaml
+
+# ruflo local state
 .swarm/
 .claude/settings.json.bak-*
-# ruflo per-session runtime state
-.claude-flow/mods/session.json
-.claude-flow/policy/state.json
-.claude-flow/harness-active-policy.json
-.claude-flow/protector-mod/status.json
-.claude-flow/protector-mod/baseline.json
-.claude-flow/protector-mod/alerts.jsonl
 .claude/proven-config.json
 .claude/.proven-config-version
-.claude-flow/cost/
-.claude-flow/policy/ledger-anchors.json
-.claude-flow/protector-mod/ring.json
